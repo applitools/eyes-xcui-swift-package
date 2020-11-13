@@ -1,4 +1,4 @@
-# eyes-xcui-swift-package
+# EyesXCUI
 
-A description of this package.
-# eyes-xcui-swift-package
+EyesXCUI SDK for automatic visual validation in XCUI.
+
