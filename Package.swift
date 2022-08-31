@@ -16,7 +16,7 @@ let package = Package(
     ],
     targets: [
         .binaryTarget(name: "EyesXCUI",
-                      url: "https://applitools.jfrog.io/artifactory/iOS/EyesXCUISwiftPackage/8.10.0/EyesXCUI.xcframework.zip",
-                      checksum: "a14e9197b594314307e1cc415d1455df1170f8859de06ec3f9f3f42c5fafe2bf"),
+                      url: "https://applitools.jfrog.io/artifactory/iOS/EyesXCUISwiftPackage/8.10.1/EyesXCUI.xcframework.zip",
+                      checksum: "ca958bb7235921122e467510b56e4a7ba17e3bc0f6871db4188b2847561fe4e6"),
     ]
 )
