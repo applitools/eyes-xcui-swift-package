@@ -16,7 +16,7 @@ let package = Package(
     ],
     targets: [
         .binaryTarget(name: "EyesXCUI",
-                      url: "https://github.com/applitools/eyes-xcui-swift-package/releases/download/9.3.2/EyesXCUI.xcframework.zip",
-                      checksum: "5da08b396b946090f9aff95d3735146a544e13a41610197514f18ab332f0cb42"),
+                      url: "https://github.com/applitools/eyes-xcui-swift-package/releases/download/9.4.0/EyesXCUI.xcframework.zip",
+                      checksum: "a097eb7e1b7625e1fdb587a70047529c1d5f27c7748ef74c6b8e0659470f15ab"),
     ]
 )
