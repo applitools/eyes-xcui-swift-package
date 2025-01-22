@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "EyesXCUI",
     platforms: [
-        .iOS(.v13)],
+        .iOS(.v15)],
     products: [
         .library(
             name: "EyesXCUI",
@@ -16,7 +16,7 @@ let package = Package(
     ],
     targets: [
         .binaryTarget(name: "EyesXCUI",
-                      url: "https://github.com/applitools/eyes-xcui-swift-package/releases/download/9.6.1/EyesXCUI.xcframework.zip",
-                      checksum: "ea8134f920a72ede7f611ff4e21f3a1008258d872b6c5edf5f175c8bd4b62074"),
+                      url: "https://github.com/applitools/eyes-xcui-swift-package/releases/download/10.0.0/EyesXCUI.xcframework.zip",
+                      checksum: "b4cfb6be1dcbab6bc72fc1f0d745db9ee1db21101f5f4df28fcd6839768e5a64"),
     ]
 )
