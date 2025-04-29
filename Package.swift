@@ -6,7 +6,9 @@ import PackageDescription
 let package = Package(
     name: "EyesXCUI",
     platforms: [
-        .iOS(.v15)],
+        .iOS(.v15),
+        .tvOS(.v15),
+    ],
     products: [
         .library(
             name: "EyesXCUI",
@@ -16,7 +18,7 @@ let package = Package(
     ],
     targets: [
         .binaryTarget(name: "EyesXCUI",
-                      url: "https://github.com/applitools/eyes-xcui-swift-package/releases/download/10.0.1/EyesXCUI.xcframework.zip",
-                      checksum: "a1ae9e5f391cba40e4ad5161c6b7ad5aa8127eeef0785894b47527ac90ab90f7"),
+                      url: "https://github.com/applitools/eyes-xcui-swift-package/releases/download/10.1.0/EyesXCUI.xcframework.zip",
+                      checksum: "b8d0fac4e560b215c5a4fdfba1f659d56732727ed0ec3c977e3c68d4aa6425a2"),
     ]
 )
