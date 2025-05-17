@@ -1,0 +1,93 @@
+name: Update EyesXCUI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-package:
+    runs-on: macos-latest
+    env:
+      SPM_REPO: applitools/eyes-xcui-swift-package
+      STORAGE_URL: https://sdksstorage.blob.core.windows.net/mobile/ios/eyesxcui
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          persist-credentials: true
+
+      - name: Set up Git identity
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "[email protected]"
+
+      - name: Get current framework version
+        id: get_version
+        run: |
+          VERSION=$(curl -s "${STORAGE_URL}/currentversion")
+          echo "Detected current framework version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Download versioned framework
+        run: |
+          curl -L -o EyesXCUI.zip \
+            "${STORAGE_URL}/${VERSION}/EyesXCUI.zip"
+
+      - name: Compute checksums
+        run: |
+          CHK_VER=$(swift package compute-checksum EyesXCUI.zip)
+          echo "Checksum: $CHK_VER"
+          echo "CHECKSUM=$CHK_VER" >> $GITHUB_ENV
+          echo "Checksums match—ready to update if needed."
+
+      - name: Determine if update is needed
+        run: |
+          CURR=$(grep -Eo '(download|eyesxcui)/[0-9]+\.[0-9]+\.[0-9]+' Package.swift \
+                 | head -1 \
+                 | sed 's#.*/##')
+          echo "Current SPM version: $CURR"
+          echo "CURRENT_VERSION=$CURR" >> $GITHUB_ENV
+          if [ "$CURR" = "$VERSION" ]; then
+            echo "NEED_UPDATE=false" >> $GITHUB_ENV
+          else
+            echo "NEED_UPDATE=true"  >> $GITHUB_ENV
+          fi
+
+      - name: Dry run - nothing to do
+        if: env.NEED_UPDATE == 'false'
+        run: |
+          echo "Package.swift already at version $VERSION. All checks passed. Exiting dry run."
+
+      - name: Update Package.swift (URL & checksum)
+        if: env.NEED_UPDATE == 'true'
+        run: |
+          PACKAGE_FILE="Package.swift"
+
+          # 1. Extract the old download URL (anything ending in Applitools_iOS.xcframework.zip)
+          OLD_URL=$(grep -Eo 'https://[^"]+\.zip' "$PACKAGE_FILE" | head -n1)
+          echo "Found old URL: $OLD_URL"
+
+          # 2. Build the new URL
+          NEW_URL="${STORAGE_URL}/${VERSION}/EyesXCUI.zip"
+          echo "New URL: $NEW_URL"
+
+          # 3. Replace the old URL with the new one
+          #    Note: we escape the slashes so sed can handle any host/path
+          sed -E -i '' "s#$(printf '%s' "$OLD_URL" | sed 's/[\/&]/\\&/g')#${NEW_URL}#g" "$PACKAGE_FILE"
+
+          # 4. Replace the checksum
+          sed -E -i '' "s/checksum: *\"[0-9a-f]{64}\"/checksum: \"${CHECKSUM}\"/" "$PACKAGE_FILE"
+
+          echo "Package.swift updated to version $VERSION and checksum $CHECKSUM."
+
+      - name: Commit, tag & push
+        if: env.NEED_UPDATE == 'true'
+        run: |
+          git add Package.swift
+          git commit -m "v${VERSION}"
+          git tag "${VERSION}"
+          git push origin main --tags
