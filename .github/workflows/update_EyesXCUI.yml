@@ -2,6 +2,12 @@ name: Update EyesXCUI
 
 on:
   workflow_dispatch:
+    inputs:
+      release_notes:
+        description: 'release notes (optional)'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: write
@@ -74,6 +80,7 @@ jobs:
           # 2. Build the new URL
           NEW_URL="${STORAGE_URL}/${VERSION}/EyesXCUI.zip"
           echo "New URL: $NEW_URL"
+          echo "NEW_URL=$NEW_URL" >> $GITHUB_ENV
 
           # 3. Replace the old URL with the new one
           #    Note: we escape the slashes so sed can handle any host/path
@@ -91,3 +98,15 @@ jobs:
           git commit -m "v${VERSION}"
           git tag "${VERSION}"
           git push origin main --tags
+
+      - name: Create GitHub Release
+        if: env.NEED_UPDATE == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_DATE=$(date +%Y-%m-%d)
+          RELEASE_NOTES="${{ github.event.inputs.release_notes }}"$'\n\n'"Direct link: ${NEW_URL}"
+
+          gh release create "${VERSION}" \
+            --title "[${VERSION}] - ${RELEASE_DATE}" \
+            --notes "${RELEASE_NOTES}"
