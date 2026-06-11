@@ -18,7 +18,7 @@ let package = Package(
     ],
     targets: [
         .binaryTarget(name: "EyesXCUI",
-                      url: "https://sdksstorage.blob.core.windows.net/mobile/ios/eyesxcui/10.1.4/EyesXCUI.zip",
-                      checksum: "ac450a5ca85df71b03577f0c487ac014915a6d978b05026b6b70e5a4a4f87213"),
+                      url: "https://sdksstorage.blob.core.windows.net/mobile/ios/eyesxcui/10.2.0/EyesXCUI.zip",
+                      checksum: "20ec6cf64fd388379d6c088ca0d0e7d3155b65402d58a81bc8cb2a31d1b487a9"),
     ]
 )
